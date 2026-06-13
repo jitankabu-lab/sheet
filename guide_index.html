@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>使い方ガイド｜感情ゼロの売却シート</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #f0f0ee;
+  font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP','Yu Gothic',sans-serif;
+  font-size: 14px; color: #1c1c28; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 480px; margin: 0 auto; padding: 20px 14px 60px; }
+.guide-header {
+  background: linear-gradient(135deg, #3a4a72 0%, #2c3860 100%);
+  border-radius: 14px; padding: 20px 18px; margin-bottom: 20px;
+  text-align: center;
+}
+.guide-header .eyebrow {
+  font-size: 10px; letter-spacing: 0.18em; color: #c47880;
+  text-transform: uppercase; font-weight: 600; margin-bottom: 6px;
+}
+.guide-header h1 {
+  font-size: 18px; font-weight: 700; color: #fff; line-height: 1.4; margin-bottom: 6px;
+}
+.guide-header .subtitle { font-size: 11px; color: rgba(255,255,255,0.65); }
+.toc { background: #fff; border: 1.5px solid #e4e4ea; border-radius: 12px; padding: 14px; margin-bottom: 20px; }
+.toc-title { font-size: 11px; font-weight: 700; color: #3a4a72; letter-spacing: 0.06em; margin-bottom: 10px; }
+.toc a {
+  display: block; padding: 7px 10px; border-radius: 7px;
+  font-size: 12px; font-weight: 600; color: #3a4a72;
+  text-decoration: none; transition: background 0.15s;
+}
+.toc a:hover { background: #dde2f0; }
+.toc a + a { border-top: 1px solid #f0f0ee; }
+.section { margin-bottom: 24px; }
+.section-header { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+.section-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #3a4a72; color: #fff;
+  font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.section-title { font-size: 15px; font-weight: 700; color: #1c1c28; }
+.section-body { font-size: 13px; color: #1c1c28; line-height: 1.75; }
+.card { background: #fff; border: 1.5px solid #e4e4ea; border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+.card-title { font-size: 12px; font-weight: 700; color: #3a4a72; letter-spacing: 0.04em; margin-bottom: 8px; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 12px; }
+th { background: #3a4a72; color: #fff; padding: 7px 9px; text-align: left; font-weight: 700; }
+td { padding: 7px 9px; border-bottom: 1px solid #eaeaee; vertical-align: top; }
+tr:nth-child(even) td { background: #f5f8ff; }
+.step {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 12px 13px; background: #fff;
+  border: 1.5px solid #e4e4ea; border-radius: 10px; margin-bottom: 8px;
+}
+.step-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #c47880; color: #fff;
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.step-body .step-title { font-size: 12px; font-weight: 700; color: #1c1c28; margin-bottom: 3px; }
+.step-body .step-desc { font-size: 11.5px; color: #4a4a58; line-height: 1.65; }
+.note { background: #dde2f0; border-radius: 8px; padding: 10px 12px; font-size: 11.5px; color: #2e3d6a; line-height: 1.7; margin-bottom: 10px; }
+.note.warn { background: #eedde0; color: #7a3040; }
+.note.green { background: #d8eeea; color: #2e6b60; }
+.status-row {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 11px 12px; border-radius: 10px;
+  margin-bottom: 7px; border: 1.5px solid transparent;
+}
+.status-row.s-achieve { background: #c4e5de; border-color: #3a8070; }
+.status-row.s-near    { background: #e8cece; border-color: #b06070; }
+.status-row.s-hold    { background: #cdd5ec; border-color: #2e3d66; }
+.status-row.s-decline { background: #ddc4c8; border-color: #8a3040; }
+.status-row.s-final   { background: #e0c8cc; border-color: #7a3040; }
+.status-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; white-space: nowrap; flex-shrink: 0; color: #fff; }
+.sb-achieve { background: #4a8a7e; }
+.sb-near    { background: #c47880; }
+.sb-hold    { background: #3a4a72; }
+.sb-decline { background: #7a3040; }
+.sb-final   { background: #7a3040; }
+.status-desc { font-size: 12px; color: #1c1c28; line-height: 1.6; }
+.status-desc strong { display: block; font-weight: 700; margin-bottom: 2px; }
+.phase-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+.phase-cell { border-radius: 8px; padding: 9px 8px; text-align: center; }
+.phase-cell .ph-name { font-size: 10px; font-weight: 700; margin-bottom: 3px; }
+.phase-cell .ph-desc { font-size: 9.5px; line-height: 1.5; }
+.ph-green { background: #d8eeea; color: #2e6b60; }
+.ph-pink  { background: #f0dde0; color: #7a3040; }
+.ph-red   { background: #eedde0; color: #7a3040; }
+.faq-item { margin-bottom: 10px; }
+.faq-q { background: #dde2f0; border-radius: 8px 8px 0 0; padding: 9px 12px; font-size: 12px; font-weight: 700; color: #2e3d6a; }
+.faq-a { background: #fff; border: 1.5px solid #e4e4ea; border-top: none; border-radius: 0 0 8px 8px; padding: 9px 12px; font-size: 12px; color: #1c1c28; line-height: 1.7; }
+.guide-footer { margin-top: 30px; padding-top: 14px; border-top: 1px solid #d0d0d8; font-size: 10px; color: #a0a0b0; text-align: center; line-height: 1.8; }
+.back-btn {
+  display: block; width: 100%; padding: 13px;
+  background: #3a4a72; color: #fff; border-radius: 10px;
+  text-align: center; font-size: 13px; font-weight: 700;
+  text-decoration: none; margin-bottom: 12px; margin-top: 24px;
+}
+hr.sec { border: none; border-top: 1.5px solid #eaeaee; margin: 20px 0; }
+.preset-table td:first-child { font-weight: 700; color: #3a4a72; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="guide-header">
+    <div class="eyebrow">時短株ラボ</div>
+    <h1>感情ゼロの売却シート<br>使い方ガイド</h1>
+    <div class="subtitle">週1回・5分で「いつ売るか」を仕組みで決める</div>
+  </div>
+  <div class="toc">
+    <div class="toc-title">目次</div>
+    <a href="#sec1">1. このシートでできること</a>
+    <a href="#sec2">2. 初回セットアップ</a>
+    <a href="#sec3">3. Step1　銘柄を登録する</a>
+    <a href="#sec4">4. Step2　毎週の使い方</a>
+    <a href="#sec5">5. ステータスの見方</a>
+    <a href="#sec6">6. よくある質問</a>
+  </div>
+  <div class="section" id="sec1">
+    <div class="section-header"><div class="section-num">1</div><div class="section-title">このシートでできること</div></div>
+    <p class="section-body" style="margin-bottom:12px">株の「売り時」をルールで決めるためのツールです。購入時に3つのルールを設定しておくだけで、毎週の株価入力から自動で判定が出ます。</p>
+    <table>
+      <tr><th>できること</th><th>内容</th></tr>
+      <tr><td>最大10銘柄を管理</td><td>まとめて毎週チェックできます</td></tr>
+      <tr><td>週1回・約5分で完結</td><td>日曜夜に株価を入れるだけ</td></tr>
+      <tr><td>売り時を5段階で判定</td><td>利確候補 / あと少し / 保有中 / 目標調整 / 撤退検討</td></tr>
+      <tr><td>価格推移グラフ</td><td>目標ラインとの比較が一目で分かる</td></tr>
+      <tr><td>ホーム画面に追加可能</td><td>アプリのように毎週すぐ開けます</td></tr>
+    </table>
+    <div class="note warn">本ツールは投資の学習・思考整理を目的としたシミュレーターです。投資助言ではありません。売買の最終判断はご自身の責任で行ってください。</div>
+  </div>
+  <hr class="sec">
+  <div class="section" id="sec2">
+    <div class="section-header"><div class="section-num">2</div><div class="section-title">初回セットアップ</div></div>
+    <div class="card">
+      <div class="card-title">ブラウザで開く</div>
+      <p style="font-size:12px;line-height:1.7">納品メールに記載のURLをスマートフォンのブラウザ（Chrome）で開いてください。インストールは不要です。URLを開くだけで使えます。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">利用規約への同意</div>
+      <p style="font-size:12px;line-height:1.7">初回起動時のみ利用規約の確認画面が表示されます。チェックボックスにチェックを入れ「同意してはじめる」をタップしてください。次回以降は表示されません。</p>
+    </div>
+    <div class="card">
+      <div class="card-title">ホーム画面に追加する（推奨）</div>
+      <p style="font-size:12px;line-height:1.7;margin-bottom:10px">ホーム画面に追加するとアプリのように毎週すぐ開けて便利です。</p>
+      <table>
+        <tr><th>Android（Chrome）</th></tr>
+        <tr><td style="font-size:11.5px;line-height:1.7">1. ChromeでURLを開く<br>2. 右上「︙」メニューをタップ<br>3.「ホーム画面に追加」を選択<br>4.「追加」をタップ</td></tr>
+      </table>
+    </div>
+  </div>
+  <hr class="sec">
+  <div class="section" id="sec3">
+    <div class="section-header"><div class="section-num">3</div><div class="section-title">Step1　銘柄を登録する</div></div>
+    <p class="section-body" style="margin-bottom:12px">はじめに「銘柄管理」タブで銘柄情報と売却ルールを設定します。一度設定すれば、あとは毎週株価を入力するだけです。</p>
+    <div class="note">「銘柄管理」タブを開き、「＋ 銘柄を追加」ボタンをタップしてください。最大10件まで登録できます。</div>
+    <div class="card">
+      <div class="card-title">銘柄情報の入力</div>
+      <table>
+        <tr><th>項目</th><th>内容</th><th>例</th></tr>
+        <tr><td>銘柄コード</td><td>証券コード（4桁）</td><td>7203</td></tr>
+        <tr><td>銘柄名</td><td>分かりやすい名前</td><td>トヨタ</td></tr>
+        <tr><td>購入日</td><td>カレンダーから選択</td><td>2026/03/10</td></tr>
+        <tr><td>購入価格</td><td>1株あたりの購入価格（円）</td><td>2,400</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">出口ルールの設定（3つのパラメータ）</div>
+      <p style="font-size:12px;line-height:1.7;margin-bottom:10px">売却の判断基準となる3つの数値を設定します。</p>
+      <table>
+        <tr><th>設定項目</th><th>意味</th><th>初期値</th></tr>
+        <tr><td>目標上昇率（%）</td><td>何%上がったら売るか</td><td>20%</td></tr>
+        <tr><td>目標維持週（W）</td><td>目標到達のチャンスを何週間待つか</td><td>20週</td></tr>
+        <tr><td>最終撤退週（W）</td><td>この週までに達しなければ撤退を検討</td><td>40週</td></tr>
+      </table>
+      <div class="note" style="margin-bottom:0">「ルールをワンタッチで設定」ボタンで標準的なプリセットをすぐ適用できます。プリセットは「マイルール」タブで変更できます。<br><br>標準：+20% / 20W / 40W　　短期：+10% / 12W / 24W　　長期：+30% / 30W / 60W</div>
+    </div>
+  </div>
+  <hr class="sec">
+  <div class="section" id="sec4">
+    <div class="section-header"><div class="section-num">4</div><div class="section-title">Step2　毎週の使い方</div></div>
+    <p class="section-body" style="margin-bottom:12px">毎週日曜夜など、週に1回だけ行います。所要時間は約5分です。</p>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">「今週のチェック」タブを開く</div><div class="step-desc">画面上部のタブで「今週のチェック」をタップします。登録済みの銘柄が一覧で表示されます。</div></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">各銘柄の株価を入力する</div><div class="step-desc">各銘柄の入力欄に今週の株価（金曜終値）を入力します。入力が完了した銘柄は緑色の背景に変わります。先週の株価も参考として表示されます。</div></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">「今週の判定を見る」をタップ</div><div class="step-desc">全銘柄の入力が終わったらボタンをタップします。入力した株価が保存され、判定結果がまとめて表示されます。</div></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">週次レポートを確認する</div><div class="step-desc">各銘柄のステータスが一覧で表示されます。「利確候補」が出たら翌週の売り注文を検討しましょう。「詳細 →」をタップすると銘柄の詳細を確認できます。</div></div></div>
+    <div class="note green">1件以上入力済みであれば「今週の判定を見る」ボタンが有効になります。全銘柄まとめて入力してからタップするのがおすすめです。</div>
+  </div>
+  <hr class="sec">
+  <div class="section" id="sec5">
+    <div class="section-header"><div class="section-num">5</div><div class="section-title">ステータスの見方</div></div>
+    <p class="section-body" style="margin-bottom:12px">週次レポートに表示される5種類のステータスの意味です。</p>
+    <div class="status-row s-achieve"><span class="status-badge sb-achieve">利確候補</span><div class="status-desc"><strong>現在株価が目標価格以上</strong>売却を検討するタイミングです。翌週の売り注文を考えましょう。</div></div>
+    <div class="status-row s-near"><span class="status-badge sb-near">あと少し</span><div class="status-desc"><strong>目標価格まで5%以内</strong>目標到達まであと一歩。引き続き保有しましょう。</div></div>
+    <div class="status-row s-hold"><span class="status-badge sb-hold">保有中</span><div class="status-desc"><strong>目標維持期間内・目標まで距離あり</strong>設定したルール通りに保有継続です。</div></div>
+    <div class="status-row s-decline"><span class="status-badge sb-decline">目標調整</span><div class="status-desc"><strong>目標維持週を超えて目標価格が段階的に下降中</strong>毎週ルールに従って判断しましょう。</div></div>
+    <div class="status-row s-final"><span class="status-badge sb-final">撤退検討</span><div class="status-desc"><strong>最終撤退週に到達</strong>ルール上の出口です。一度立ち止まって判断しましょう。</div></div>
+    <div style="margin-top:16px;margin-bottom:8px;font-size:12px;font-weight:700;color:#3a4a72">フェーズのイメージ</div>
+    <div class="phase-bar">
+      <div class="phase-cell ph-green"><div class="ph-name">保有継続期間</div><div class="ph-desc">0週〜目標維持週<br>目標価格が固定</div></div>
+      <div class="phase-cell ph-pink"><div class="ph-name">目標調整期間</div><div class="ph-desc">目標維持週〜最終撤退週<br>目標価格が下降</div></div>
+      <div class="phase-cell ph-red"><div class="ph-name">最終撤退</div><div class="ph-desc">最終撤退週以降<br>購入価格が目標</div></div>
+    </div>
+  </div>
+  <hr class="sec">
+  <div class="section" id="sec6">
+    <div class="section-header"><div class="section-num">6</div><div class="section-title">よくある質問</div></div>
+    <div class="faq-item"><div class="faq-q">Q. パラメータはどう決めればいいですか？</div><div class="faq-a">まずはプリセット「標準」から始めることをおすすめします。慣れてきたら「マイルール」タブで自分の投資スタイルに合わせて調整してください。</div></div>
+    <div class="faq-item"><div class="faq-q">Q. 毎週必ず入力しないといけませんか？</div><div class="faq-a">必須ではありません。入力した週だけ履歴に記録されます。ただし毎週入力することでグラフと判定の精度が上がります。</div></div>
+    <div class="faq-item"><div class="faq-q">Q. データが消えてしまいました</div><div class="faq-a">データはブラウザの内部（localStorage）に保存されています。ブラウザの「閲覧データを削除」を行うと消えてしまいます。大切なデータは定期的にメモ等に控えておくことをおすすめします。</div></div>
+    <div class="faq-item"><div class="faq-q">Q. スマートフォンを機種変更したらどうなりますか？</div><div class="faq-a">データは旧端末のブラウザに保存されているため、新しい端末では引き継がれません。URLは変わらないため、銘柄情報を再登録してご利用ください。</div></div>
+    <div class="faq-item"><div class="faq-q">Q. ステータスが「設定中」と表示されます</div><div class="faq-a">購入日または購入価格が未入力の銘柄に表示されます。「銘柄管理」タブで購入日・購入価格を入力してください。</div></div>
+    <div class="faq-item"><div class="faq-q">Q. 複数のスマートフォンで同じデータを使えますか？</div><div class="faq-a">URLは共通ですが、データは各端末のブラウザごとに別々に保存されます。同じデータを複数端末で共有することはできません。</div></div>
+  </div>
+  <a href="javascript:history.back()" class="back-btn">売却管理シートに戻る</a>
+  <div class="guide-footer">
+    本ツールは個人の投資学習・思考整理を目的としたシミュレーターです。<br>
+    金融商品取引法に基づく投資助言・代理業ではありません。<br>
+    投資に関する最終判断はご自身の責任において行ってください。<br><br>
+    (c) 時短株ラボ（ふく）
+  </div>
+</div>
+</body>
+</html>
