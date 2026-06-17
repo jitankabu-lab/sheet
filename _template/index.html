@@ -550,7 +550,7 @@ input[type=number] { -moz-appearance: textfield; }
   <div class="footer">
     時短株ラボ 売却管理シート<br>
     投資判断はご自身の責任において行ってください
-   <a class="guide-link" href="/sheet/guide/">使い方ガイドを見る →</a>
+    <a class="guide-link" href="/sheet/guide/">使い方ガイドを見る →</a>
   </div>
   <div class="license-info">
     <div>ライセンス所有者</div>
@@ -1515,8 +1515,8 @@ function launchConfetti() {
 // ── ライセンス・規約 ──────────────────────────────
 function displayLicense() {
   const holder=document.getElementById('licenseHolder'), id=document.getElementById('licenseId');
-  if(holder.textContent.trim()==='__LICENSE_HOLDER__'||holder.textContent.trim()===''){holder.textContent='（未登録）';holder.style.color='#c4b8a8';}
-  if(id.textContent.trim()==='__LICENSE_ID__'||id.textContent.trim()===''){id.textContent='TRIAL-00000';id.style.color='#c4b8a8';}
+  if(holder.textContent.trim()==='__LICENSE_HOLDER__'){holder.textContent='（未登録）';holder.style.color='#c4b8a8';}
+  if(id.textContent.trim()==='__LICENSE_ID__'){id.textContent='TRIAL-00000';id.style.color='#c4b8a8';}
 }
 function acceptTerms() { localStorage.setItem('exitTermsAccepted','1'); document.getElementById('termsOverlay').style.display='none'; }
 function checkTerms()  { if(!localStorage.getItem('exitTermsAccepted')) document.getElementById('termsOverlay').style.display='flex'; }
