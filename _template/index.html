@@ -2,6 +2,14 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<link rel="apple-touch-icon" href="/sheet/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/sheet/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/sheet/icon-512.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="売却シート">
+<meta name="theme-color" content="#3a4a72">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>売却管理シート｜時短株ラボ</title>
 <style>
@@ -144,14 +152,14 @@ input[type=number] { -moz-appearance: textfield; }
 .sb-final   { background:#7a3040; color:#fff; }
 
 /* リセットボタン */
-.guide-link {
-  display:block; width:fit-content; margin:14px auto 0;
-  padding:8px 16px; border:1.5px solid #3a4a72;
-  border-radius:20px; background:#fff;
-  font-size:12px; font-weight:700; color:#3a4a72;
-  text-decoration:none; transition:all 0.15s;
+.btn-reset-week {
+  display:block; width:100%; margin-top:10px;
+  padding:9px; border:1px solid #d0d0d8;
+  background:#f5f5f4; border-radius:8px;
+  font-size:11px; color:#6b6b7a; text-align:center;
+  cursor:pointer; font-family:inherit; transition:all 0.15s;
 }
-.guide-link:active { background:#dde2f0; }
+.btn-reset-week:active { background:#eaeaee; }
 
 /* 変化バッジ */
 .change-badge {
@@ -482,6 +490,56 @@ input[type=number] { -moz-appearance: textfield; }
   margin-top:10px; padding-top:10px;
   border-top:1px solid #c8cfe8;
 }
+/* ── テスト用シミュレーター ── */
+.settings-debug {
+  border:1.5px dashed #c47880 !important;
+  background:#fdf5f6 !important;
+}
+.debug-note {
+  font-size:11px; color:#7a3040; line-height:1.6;
+  margin-bottom:12px; background:#eedde0;
+  border-radius:8px; padding:9px 11px;
+}
+.debug-scenarios {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:10px;
+}
+.btn-scenario {
+  padding:10px 6px; border:1.5px solid #e4e4ea;
+  border-radius:10px; background:#fff;
+  font-size:11px; font-weight:700; color:#1c1c28;
+  cursor:pointer; font-family:inherit; text-align:center;
+  line-height:1.5; transition:all 0.15s;
+}
+.btn-scenario:active { background:#f0dde0; border-color:#c47880; }
+.btn-scenario span { font-size:10px; color:#6b6b7a; font-weight:500; display:block; }
+.debug-custom {
+  display:flex; gap:8px; align-items:center; margin-bottom:10px;
+}
+.debug-custom input {
+  flex:1; padding:10px 10px; border:1.5px solid #e4e4ea;
+  border-radius:8px; background:#fff; font-size:14px;
+  font-family:inherit; color:#1c1c28;
+}
+.debug-custom input:focus { outline:none; border-color:#3a4a72; }
+.btn-custom-gen {
+  padding:10px 12px; border:none; border-radius:8px;
+  background:#3a4a72; color:#fff;
+  font-size:12px; font-weight:700; font-family:inherit;
+  cursor:pointer; white-space:nowrap;
+}
+.btn-clear-test {
+  display:block; width:100%; padding:10px;
+  border:1.5px solid #c47880; border-radius:8px;
+  background:#fff; color:#c47880;
+  font-size:12px; font-weight:700; font-family:inherit;
+  cursor:pointer; text-align:center;
+}
+.test-mode-banner {
+  background:#fce4e8; border:1.5px solid #c47880;
+  border-radius:10px; padding:9px 12px;
+  font-size:11px; font-weight:700; color:#7a3040;
+  text-align:center; margin-bottom:10px;
+}
 </style>
 </head>
 <body>
@@ -550,7 +608,6 @@ input[type=number] { -moz-appearance: textfield; }
   <div class="footer">
     時短株ラボ 売却管理シート<br>
     投資判断はご自身の責任において行ってください
-    <a class="guide-link" href="/sheet/guide/">使い方ガイドを見る →</a>
   </div>
   <div class="license-info">
     <div>ライセンス所有者</div>
@@ -676,6 +733,7 @@ function renderCheckPane() {
       </div>`;
     }
     html += buildReport(active);
+    html += `<button class="btn-reset-week" onclick="resetWeekEntries()">今週の入力をリセット（テスト用）</button>`;
   } else {
     // ── 入力エリア ──
     html += `
@@ -724,6 +782,7 @@ function renderCheckPane() {
           今週の判定を見る
           <div class="btn-cta-sub">入力済み ${doneCount}銘柄を保存</div>
         </button>
+        <button class="btn-reset-week" onclick="resetWeekEntries()">今週の入力をリセット（テスト用）</button>
       </div>`;
 
     // 前回入力済みがあれば前回の結果も表示
@@ -865,6 +924,21 @@ function buildReport(active, isPrev=false) {
       <div class="report-title">${isPrev?'📋 ':'📊 '}${title}</div>
       <div class="report-items">${rows}</div>
     </div>`;
+}
+
+function resetWeekEntries() {
+  if (!confirm('今週入力した株価をリセットします。\n過去の履歴はそのまま残ります。よろしいですか？')) return;
+  stocks.forEach(s => {
+    const cw = weeksFromDate(s.buyDate);
+    if (!isNaN(cw) && s.priceHistory && s.priceHistory[cw] !== undefined) {
+      delete s.priceHistory[cw];
+    }
+    s.currentPrice = '';
+    s.priceUpdated = '';
+  });
+  weekInputBuffer = {};
+  save();
+  renderCheckPane();
 }
 
 function goToStock(id) {
@@ -1430,13 +1504,94 @@ function renderSettings() {
       <button class="btn-save-presets" onclick="commitPresets()">プリセットを保存する</button>
       <div class="save-ok-msg" id="saveOkMsg">✅ 保存しました</div>
     </div>
-`;
+
+    ${localStorage.getItem('exitTestBackup') ? `<div class="test-mode-banner">⚠️ テストモード中 ─ 元データはバックアップ済みです</div>` : ''}
+
+    <div class="settings-section settings-debug">
+      <div class="settings-section-title" style="color:#7a3040">🔧 テスト用シミュレーター</div>
+      <div class="debug-note">登録済みの銘柄に、指定した週数分の価格履歴を自動生成します。<br>元データは自動バックアップされ、クリアで復元できます。</div>
+      <div class="debug-scenarios">
+        <button class="btn-scenario" onclick="generateTestScenario(10)">📅 10週目<span>維持期間中</span></button>
+        <button class="btn-scenario" onclick="generateTestScenario(25)">📉 25週目<span>目標調整</span></button>
+        <button class="btn-scenario" onclick="generateTestScenario(38)">🏁 38週目<span>撤退検討</span></button>
+      </div>
+      <div class="debug-custom">
+        <input type="number" id="customWeeks" inputmode="numeric" placeholder="週数（2〜60）" min="2" max="60" value="">
+        <button class="btn-custom-gen" onclick="runCustomWeeks()">この週数で生成</button>
+      </div>
+      <button class="btn-clear-test" onclick="clearTestData()">🗑 テストデータをクリア（元に戻す）</button>
+    </div>`;
 }
 
 function commitPresets() {
   savePresets();
   const msg = document.getElementById('saveOkMsg');
   if (msg) { msg.style.display='block'; setTimeout(()=>{ msg.style.display='none'; }, 2000); }
+}
+
+// ── テスト用シミュレーター ─────────────────────────
+function generateTestScenario(weeks) {
+  if (!weeks || weeks < 2 || weeks > 60) {
+    alert('2〜60 の範囲で週数を指定してください'); return;
+  }
+  const active = stocks.filter(s => parseFloat(s.buyPrice) > 0);
+  if (!active.length) {
+    alert('先に「銘柄管理」タブで銘柄を登録してください'); return;
+  }
+
+  // 初回のみ元データをバックアップ
+  if (!localStorage.getItem('exitTestBackup')) {
+    localStorage.setItem('exitTestBackup', JSON.stringify(stocks));
+  }
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const pad = n => String(n).padStart(2,'0');
+
+  stocks.forEach(s => {
+    const buy = parseFloat(s.buyPrice);
+    if (!buy || isNaN(buy)) return;
+
+    // 購入日を weeks週前に設定
+    const buyDate = new Date(today.getTime() - weeks * 7 * 24 * 60 * 60 * 1000);
+    s.buyDate = `${buyDate.getFullYear()}-${pad(buyDate.getMonth()+1)}-${pad(buyDate.getDate())}`;
+
+    // weeks-1 週分の価格履歴を乱数ウォークで生成
+    s.priceHistory = {};
+    let price = buy;
+    for (let w = 1; w < weeks; w++) {
+      const noise = (Math.random() - 0.46) * 0.10; // 微妙に上方向バイアス
+      price = Math.round(price * (1 + noise));
+      price = Math.max(Math.round(buy * 0.65), Math.min(Math.round(buy * 1.6), price));
+      s.priceHistory[w] = price;
+    }
+
+    // 今週（= weeks 週目）は未入力にして今週のチェックができる状態にする
+    s.currentPrice = '';
+    s.priceUpdated = '';
+  });
+
+  save();
+  switchTab('check');
+}
+
+function runCustomWeeks() {
+  const el = document.getElementById('customWeeks');
+  const v = parseInt(el ? el.value : '');
+  if (isNaN(v) || v < 2 || v > 60) {
+    alert('2〜60 の範囲で入力してください'); return;
+  }
+  generateTestScenario(v);
+}
+
+function clearTestData() {
+  const backup = localStorage.getItem('exitTestBackup');
+  if (!backup) { alert('バックアップが見つかりません。\nすでにクリア済みか、テスト未実行です。'); return; }
+  if (!confirm('テストデータをクリアして、元のデータに戻します。\nよろしいですか？')) return;
+  stocks = JSON.parse(backup);
+  stocks.forEach(s => { if (!s.priceHistory) s.priceHistory = {}; });
+  save();
+  localStorage.removeItem('exitTestBackup');
+  switchTab('check');
 }
 
 // ── モチベーションモーダル ──────────────────────────
@@ -1515,8 +1670,8 @@ function launchConfetti() {
 // ── ライセンス・規約 ──────────────────────────────
 function displayLicense() {
   const holder=document.getElementById('licenseHolder'), id=document.getElementById('licenseId');
-  if(holder.textContent.trim()==='__LICENSE_HOLDER__'){holder.textContent='（未登録）';holder.style.color='#c4b8a8';}
-  if(id.textContent.trim()==='__LICENSE_ID__'){id.textContent='TRIAL-00000';id.style.color='#c4b8a8';}
+  if(holder.textContent.trim()==='__LICENSE_HOLDER__'||holder.textContent.trim()===''){holder.textContent='（未登録）';holder.style.color='#c4b8a8';}
+  if(id.textContent.trim()==='__LICENSE_ID__'||id.textContent.trim()===''){id.textContent='TRIAL-00000';id.style.color='#c4b8a8';}
 }
 function acceptTerms() { localStorage.setItem('exitTermsAccepted','1'); document.getElementById('termsOverlay').style.display='none'; }
 function checkTerms()  { if(!localStorage.getItem('exitTermsAccepted')) document.getElementById('termsOverlay').style.display='flex'; }
